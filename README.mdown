@@ -18,4 +18,74 @@ Using this from FM GO results in the text being wrapped in an HTML page when it 
  like so
  http://user:password@server/SimpleFMProxy.php
 
- Edit the "Config" section below to match your server.
+ Edit the "Config" section to match your server.
+
+##Examples##
+
+To make a request to FileMaker server you do something like this.
+
+	http://web:web@<your_server>/SimpleFMProxy.php?-db=FMServer_Sample&-lay=English_Form_View&-findany
+	
+Notice the use of "web:web@" in the url. This us using Basic Authentication to authenticate against the FileMaker server. The format is "username:password@"
+
+The above request would result in this response
+
+	<?xml version="1.0"?>
+	<result><error>0</error><errorMsg>No error</errorMsg><success>1</success><count>1</count><fetchsize>1</fetchsize><records><record><metaRECID>13</metaRECID><metaMODID>6</metaMODID><Title>Alabama 24/7</Title><Status>Popular</Status><Author>Rick Smolan and David Elliot Cohen</Author><Publisher>DK Publishing</Publisher><Cover_Photo_Credit>Hal Yeager, The Birmingham News</Cover_Photo_Credit><Description>The remarkable photographs showcased in Alabama 24/7 are the result of an epic project, America 24/7, which harnessed the talents of more than 25,000 photographers. </Description><Quantity_in_Stock>200</Quantity_in_Stock><Number_of_Pages>144</Number_of_Pages><Img>/fmi/xml/cnt/data.jpg?-db=FMServer_Sample&amp;-lay=English_Form_View&amp;-recid=13&amp;-field=Img(1)</Img></record></records></result>
+	
+If you would like an easier xml format to read you can add the format parameter and set its value to "txt"
+	
+	http://web:web@<your_server>/SimpleFMProxy.php?-db=FMServer_Sample&-lay=English_Form_View&-findany&format=txt
+	
+The response would then look like this.
+
+	<?xml version="1.0"?>
+	<result>
+	  <error>0</error>
+	  <errorMsg>No error</errorMsg>
+	  <success>1</success>
+	  <count>1</count>
+	  <fetchsize>1</fetchsize>
+	  <records>
+	    <record>
+	      <metaRECID>13</metaRECID>
+	      <metaMODID>6</metaMODID>
+	      <Title>Alabama 24/7</Title>
+	      <Status>Popular</Status>
+	      <Author>Rick Smolan and David Elliot Cohen</Author>
+	      <Publisher>DK Publishing</Publisher>
+	      <Cover_Photo_Credit>Hal Yeager, The Birmingham News</Cover_Photo_Credit>
+	      <Description>The remarkable photographs showcased in Alabama 24/7 are the result of an epic project, America 24/7, which harnessed the talents of more than 25,000 photographers. </Description>
+	      <Quantity_in_Stock>200</Quantity_in_Stock>
+	      <Number_of_Pages>144</Number_of_Pages>
+	      <Img>/fmi/xml/cnt/data.jpg?-db=FMServer_Sample&amp;-lay=English_Form_View&amp;-recid=13&amp;-field=Img(1)</Img>
+	    </record>
+	  </records>
+	</result>
+	
+if you prefer JSON, set format=json like so
+
+	http://web:web@<your_server>/SimpleFMProxy.php?-db=FMServer_Sample&-lay=English_Form_View&-findany&format=json
+	
+and you will get this.  Its not pretty printed, but it is valid JSON
+
+	{"error":"0","errorMsg":"No error","success":"1","count":"1","fetchsize":"1","records":{"record":{"metaRECID":"27","metaMODID":"4","Title":"Michigan 24\/7","Status":"Popular","Author":"Rick Smolan and David Elliot Cohen","Publisher":"DK Publishing","Cover_Photo_Credit":"Cory Morse, Muskegon Chronicle","Description":"The remarkable photographs showcased in Michigan 24\/7 are the result of an epic project, America 24\/7, which harnessed the talents of more than 25,000 photographers. ","Quantity_in_Stock":"200","Number_of_Pages":"192","Img":"\/fmi\/xml\/cnt\/data.jpg?-db=FMServer_Sample&-lay=English_Form_View&-recid=27&-field=Img(1)"}}}
+
+Finally if you are calling this from FileMaker using a web viewer you may want to just get back the response in a format that can be easily parsed into vars. You can set format=let. Like so.
+
+	http://web:web@<your_server>/SimpleFMProxy.php?-db=FMServer_Sample&-lay=English_Form_View&-findany&format=let
+	
+This will result in 
+
+	<html><head></head><body>Let(
+	[
+	$error="0";
+	$errortext="No error";
+	$count="1";
+	$fetchsize="1"
+	];
+	0
+	)
+	//END</body></html>
+	
+Then you just have to extract the Let Function and use FileMaker's Evaluate function. Currently this only returns the meta data about the request. That is all I needed at the moment. It wraps the Let function in html only because FM Go's web viewer will do this anyway.  So I though it best to keep it consistent.
