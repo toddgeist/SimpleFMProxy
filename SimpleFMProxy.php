@@ -199,8 +199,8 @@ function rationalizeXML($xml){
 		foreach ($this_record->field as $field ){
 			$fieldName = (string) $field['name'];
 			$fieldName = str_ireplace(' ', '_', $fieldName);
-		
-			$recordXML->addChild((string) $field['name'], (string) $field->data);
+			$data = htmlentities( (string) $field->data );
+			$recordXML->addChild((string) $field['name'], $data);
 		}
 	}
 	if (!empty($xml->resultset[0]->record[0]->relatedset)){
