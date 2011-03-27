@@ -1,0 +1,21 @@
+SimpleFMProxy
+====================
+
+##A simple php proxy that returns data from FileMaker queries in several useful formats##
+ 
+use the normal FileMaker query syntax
+you can add an additional query parameter "format"
+
+* format=let returns just the meta data formatted as a Let function that can be evaluated in FM and turned into $vars;
+Using this from FM GO results in the text being wrapped in an HTML page when it comes back
+        so the function does this by default
+        The Let function will be in the body tag.
+* format=xml returns the query as a normalized XML suitable for consumption by AJAX applications
+* format=txt returns pretty printed xml as text.
+* format=json returns normalized json suitable for consumption by ajax applications
+
+ Authentication is done via Basic HTTP through the url
+ like so
+ http://user:password@server/SimpleFMProxy.php
+
+ Edit the "Config" section below to match your server.
