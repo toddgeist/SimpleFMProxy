@@ -26,7 +26,7 @@ To make a request to FileMaker server you do something like this.
 
 	http://web:web@<your_server>/SimpleFMProxy.php?-db=FMServer_Sample&-lay=English_Form_View&-findany
 	
-Notice the use of "web:web@" in the url. This us using Basic Authentication to authenticate against the FileMaker server. The format is "username:password@"
+Notice the use of "web:web@" in the url. This is using Basic Authentication to authenticate against the FileMaker server. The format is "username:password@"
 
 The above request would result in this response
 
